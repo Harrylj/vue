@@ -1,0 +1,7 @@
+html,body{
+	background-color: red;
+	color: red;
+}
+#app{
+	border: 1px solid red !important;
+}
