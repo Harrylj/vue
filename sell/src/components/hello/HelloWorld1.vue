@@ -1,7 +1,9 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
+    <h3>{{post}}</h3>
     <h2>Essential Links</h2>
+    <router-link :to="{ name: 'test', params: { userId: 123 }}">User</router-link>
   </div>
 </template>
 
@@ -10,7 +12,10 @@ export default {
   name: 'HelloWorld1',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App  2018-04-02'
+      msg: 'Welcome to Your Vue.js App  2018-04-02',
+      loading: false,
+      post: this.$route.userId,
+      error: null
     }
   }
 }

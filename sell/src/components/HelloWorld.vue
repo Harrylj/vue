@@ -1,6 +1,7 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
+    <router-link :to="{ name: 'HelloWorld1', params: { userId: 123 }}">User</router-link>
     <h2>Essential Links</h2>
     <ul>
       <li>
