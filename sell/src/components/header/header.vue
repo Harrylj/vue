@@ -15,7 +15,7 @@
           </div>
           <!-- 时间：2018-04-13 描述：这里的v-if判断，是因为刚生产组件时seller我们定义了是空对象，后通过异步获取对象值，才能显示内容 -->
           <div v-if="seller.supports" class="support">
-            <span class="icon"></span>
+            <span class="icon" :class="classMap[seller.supports[0].type]"></span>
             <span class="text">{{seller.supports[0].description}}</span>
           </div>
         </div>
@@ -34,8 +34,11 @@ export default {
   },
   props: {
     seller: {
-      type: ''
+      type: Object
     }
+  },
+  created () {
+    this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
   }
 }
 </script>
@@ -50,6 +53,9 @@ export default {
       font-size: 0
       .avatar
         display: inline-block
+        vertical-align: top
+        img
+          border-radius: 2px
       .content
         display: inline-block
         margin-left: 16px
@@ -69,4 +75,31 @@ export default {
             font-size: 16px
             line-height: 18px
             font-weight: bold
+        .description
+          margin-bottom: 10px
+          line-height: 12px
+          font-size: 12px
+        .support
+          .icon
+            display: inline-block
+            vertical-align: top
+            width: 12px
+            height: 12px
+            margin-right: 4px
+            background-size: 12px 12px
+            background-repeat: no-repeat
+            &.decrease
+              bg-image('decrease_1')
+            &.discount
+              bg-image('discount_1')
+            &.guarantee
+              bg-image('guarantee_1')
+            &.invoice
+              bg-image('invoice_1')
+            &.special
+              bg-image('special_1')
+          .text
+            vertical-align: top
+            line-height: 12px
+            font-size: 12px
 </style>
