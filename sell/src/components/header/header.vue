@@ -34,17 +34,21 @@
       <div v-show="detailShow" class="detail">
         <div class="detail-wrapper clearfix">
           <div class="detail-main">
+            <h1 class="name">{{seller.name}}</h1>
+            <star :size="48" :score="seller.score"></star>
             <p>{{seller.bulletin}}{{seller.bulletin}}{{seller.bulletin}}</p>
           </div>
         </div>
         <div class="detail-close">
-          <div class="icon-close"></div>
+          <i class="icon-close"></i><i class="icon-cha"></i><i class="icon-aixin"></i>
         </div>
       </div>
     </div>
 </template>
 
 <script type="text/ecmascript-6">
+// 引用star组件
+import star from '../../components/star/star';
 export default {
   name: 'headera',
   data () {
@@ -65,12 +69,16 @@ export default {
   },
   created () {
     this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
+  },
+  components: {
+    star
   }
 }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
   @import "../../common/stylus/mixin";
+  @import "../../common/stylus/font";
   .header
     position relative
     overflow hidden
@@ -186,20 +194,28 @@ export default {
     .detail
       position fixed
       z-index 100
+      top 0
+      left 0
       width 100%
       height 100%
       overflow auto
       background rgba(7, 17, 27, 0.8)
       .detail-wrapper
         min-height 100%
+        width 100%
         .detail-main
-          maigin-top 64px
+          padding-top 64px
           padding-bottom 64px
+          .name
+            line-height 16px
+            text-align center
+            font-size 16px
+            font-weight 700
       .detail-close
         position relative
         width 32px
         height 32px
-        marigin -64px auto 0 auto
+        margin -64px auto 0 auto
         clear both
         font-size 32px
 
