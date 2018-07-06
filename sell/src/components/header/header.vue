@@ -48,7 +48,7 @@
 
 <script type="text/ecmascript-6">
 // 引用star组件
-import star from '../../components/star/star';
+import star from '../../components/star/star'
 export default {
   name: 'headera',
   data () {

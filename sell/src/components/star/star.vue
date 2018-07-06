@@ -1,14 +1,14 @@
 <template>
     <div class="star" :class="starType">
-        <span v-for="itemClass in itemClasses" track-by="$index" v-bind:key="itemClass" :class="itemClass" class="star-item" ></span>
+        <span v-for="itemClass in itemClasses" track-by="$index" v-bind:key="itemClass.index" :class="itemClass" class="star-item" ></span>
     </div>
 </template>
 
 <script type="text/ecmascript-6">
 const LENGTH = 5
-const CLS_ON = "on"
-const CLS_HALF = "half"
-const CLS_OFF = "off"
+const CLS_ON = 'on'
+const CLS_HALF = 'half'
+const CLS_OFF = 'off'
 export default {
   props: {
     size: {
@@ -19,10 +19,10 @@ export default {
     }
   },
   computed: {
-    starType() {
-      return "star-" + this.size
+    starType () {
+      return 'star-' + this.size
     },
-    itemClasses() {
+    itemClasses () {
       let result = []
       let score = Math.floor(this.score * 2) / 2
       let hasDecimal = score % 1 !== 0
@@ -36,10 +36,11 @@ export default {
       while (result.length < LENGTH) {
         result.push(CLS_OFF)
       }
+      console.log(result)
       return result
     }
   }
-};
+}
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
@@ -50,7 +51,6 @@ export default {
         display: inline-block;
         background-repeat: no-repeat;
     }
-
     &.star-48 {
         .star-item {
             width: 20px;
