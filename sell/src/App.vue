@@ -13,8 +13,6 @@
               <router-link to="/seller">商家</router-link>
           </div>
       </div>
-      <div class="content">I am content</div>
-      <router-link to="/test">go to test</router-link>
       <!-- 路由匹配到的组件将渲染在这里 -->
       <router-view></router-view>
   </div>
