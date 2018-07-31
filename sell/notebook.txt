@@ -1,4 +1,7 @@
-
+2018-07-31
+7-19 购物车小球动画实现(2) 01:20
+2018-07-30
+7-16 cartcontrol组件2 01:40
 2018-07-27
 7-14 shopcart购物车组件6 00:00
 2018-07-26
@@ -28,6 +31,7 @@
 
 
 QQQQQQQQQQQQQ
-7-02:goods.vue和header.vue把CSS组件化 .icon
-7-06 better-scroll
-
+7-02: goods.vue和header.vue把CSS组件化 .icon
+7-06: better-scroll
+7-14: 通过计算属性，改变值，使对应的样式发生改变。比jquery方便太多 
+7-17：购物车添加商品通过更改对象实现状态改变。--------重点。

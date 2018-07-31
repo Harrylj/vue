@@ -12,30 +12,28 @@
         <div class="desc">另需配送费&yen;{{deliveryPrice}}元</div>
       </div>
       <div class="content-right">
-        <div class="pay">
-          &yen;{{minPrice}}元起送
+        <div class="pay" :class="payClass">
+         {{payDesc}}
         </div>
       </div>
+    </div>
+    <div class="ball-container">
+      <div transition="drop" v-for="(ball,index) in balls" v-bind:key="index" v-show="ball.show" class="ball"></div>
     </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 export default {
-  name: 'shopcart',
-  data () {
-    return {
-      msg: 'shopcart !! Welcome to Your Vue.js App 2018-04-10'
-    }
-  },
+  // name: 'shopcart',
   props: {
     selectFoods: {
       type: Array,
       default () {
         return [
           {
-            price: 10,
-            count: 1
+            price: 5,
+            count: 2
           }
         ]
       }
@@ -47,6 +45,27 @@ export default {
     minPrice: {
       type: Number,
       default: 0
+    }
+  },
+  data () {
+    return {
+      balls: [
+        {
+          show: false
+        },
+        {
+          show: false
+        },
+        {
+          show: false
+        },
+        {
+          show: false
+        },
+        {
+          show: false
+        }
+      ]
     }
   },
   computed: {
@@ -65,6 +84,30 @@ export default {
         count += food.count
       })
       return count
+    },
+    // 判断是否显示去配送，或差多少钱起配送
+    payDesc () {
+      if (this.totalprice === 0) {
+        return `￥${this.minPrice}元起送`
+      } else if (this.totalPrice < this.minPrice) {
+        let diff = this.minPrice - this.totalPrice
+        return `还差￥${diff}元起送`
+      } else {
+        return '去结算'
+      }
+    },
+    // 判断是否显示去配送的class
+    payClass () {
+      if (this.totalPrice < this.minPrice) {
+        return 'no-enough'
+      } else {
+        return 'enough'
+      }
+    }
+  },
+  methods: {
+    drop (el) {
+      console.log(el)
     }
   }
 }
@@ -151,5 +194,23 @@ export default {
         line-height 48px
         text-align center
         font-size 12px
-        background rgba(255,255,255,0.4)
+        &.no-enough
+          background rgba(255,255,255,0.4)
+        &.enough
+          background green
+          color #fff
+  .ball-container
+    .ball
+      position fixed
+      left 32px
+      bottom 22px
+      z-index 200
+      &.drop-transition
+        transition  all 0.4s
+        .inner
+          width 16px
+          height 16px
+          border-radius 50%
+          background rgb(0,160,220)
+          transition all 0.4s
 </style>

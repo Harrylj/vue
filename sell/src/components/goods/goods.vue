@@ -30,19 +30,23 @@
                       <span class="now">&yen;{{food.price}}</span>
                       <span class="old" v-show="food.oldPrice">&yen;{{food.oldPrice}}</span>
                     </div>
+                    <div class="cartcontrol-wrapper">
+                      <cartcontrol :food="food"></cartcontrol>
+                    </div>
                   </div>
                 </li>
               </ul>
             </li>
           </ul>
         </div>
-        <shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
+        <shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
     </div>
 </template>
 
 <script type="text/ecmascript-6">
 import BScroll from 'better-scroll'
 import shopcart from '../../components/shopcart/shopcart'
+import cartcontrol from '../../components/cartcontrol/cartcontrol'
 const ERR_OK = 0
 export default {
   name: 'goods',
@@ -84,6 +88,18 @@ export default {
         }
       }
       return 0
+    },
+    // 联动选择商品（点击添加后，购物车发生响应）
+    selectFoods () {
+      let foods = []
+      this.goods.forEach((good) => {
+        good.foods.forEach((food) => {
+          if (food.count) {
+            foods.push(food)
+          }
+        })
+      })
+      return foods
     }
   },
   methods: {
@@ -103,6 +119,8 @@ export default {
       })
 
       this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
+        // ---cartcontrol.vue---b:这里BScroll插件默认阻止了点击，需要改变设置
+        click: true,
         // 滚动的探针
         probeType: 3
       })
@@ -122,10 +140,21 @@ export default {
         this.listHeight.push(height)
       }
       console.log(this.listHeight)
+    },
+    // 动画球
+    _drop (target) {
+
     }
   },
   components: {
-    shopcart
+    shopcart,
+    cartcontrol
+  },
+  events: {
+    // 动画球
+    'cart.add' (target) {
+      this._drop(target)
+    }
   }
 }
 </script>
@@ -221,7 +250,7 @@ export default {
               margin-right 12px
           .price
             font-weight 700
-            line-height 24px
+            line-height 36px
             .now
               margin-right 8px
               font-size 14px
@@ -230,5 +259,8 @@ export default {
               text-decoration line-through
               font-size 14px
               color rgb(147,153,159)
-
+          .cartcontrol-wrapper
+            position absolute
+            right 0
+            bottom 0
 </style>

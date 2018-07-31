@@ -1,0 +1,92 @@
+<template>
+ <div class="cartcontrol">
+   <transition name="move">
+   <div class="cart-decrease" v-show="food.count>0" @click="decreaseCart">
+     <span class="inner iconfont icon-jian"></span>
+   </div>
+   </transition>
+   <div class="cart-count" v-show="food.count>0">{{food.count}}</div>
+   <div class="cart-add iconfont icon-jia" @click="addCart"></div>
+ </div>
+</template>
+
+<script type="text/ecmascript-6">
+import Vue from 'vue'
+export default {
+  name: 'cartcontrol',
+  props: {
+    food: {
+      type: Object
+    }
+  },
+  methods: {
+    // 点击增加数量---b:这里因为BScroll插件默认组织了点击事件，需要去设置
+    addCart (event) {
+      // 这里阻止了默认的点击事件，不然会点击2次
+      if (!event._constructed) {
+        return
+      }
+      if (!this.food.count) {
+        Vue.set(this.food, 'count', 1)
+      } else {
+        this.food.count++
+      }
+      // 这里可能是老版本
+      // this.$dispatch('cart.add', event.target)
+      this.$emit('cart.add', event.target)
+    },
+    // 点击减少数量---b:这里因为BScroll插件默认组织了点击事件，需要去设置
+    decreaseCart (event) {
+      // 这里阻止了默认的点击事件，不然会点击2次
+      if (!event._constructed) {
+        return
+      }
+      if (!this.food.count) {
+        Vue.set(this.food, 'count', 1)
+      } else {
+        this.food.count--
+      }
+    }
+  },
+  components: {}
+}
+</script>
+
+<style scoped lang="stylus" rel="stylesheet/stylus">
+  .cartcontrol
+    font-size 0
+    .cart-decrease
+      display inline-block
+      padding 6px
+      transition all 0.4s linear
+      &.move-transition
+        opacity 1
+        transform translate3d(0,0,0)
+      .inner
+        display inline-block
+        line-height 24px
+        font-size 24px
+        color rgb(0,160,220)
+        transition all 0.4s linear
+        transform rotate(0)
+      &.move-enter, &.move-leave
+        opacity 0
+        transform translate3d(24px,0,0)
+        .inner
+          transform rotate(180deg)
+    .cart-count
+      display inline-block
+      vertical-align top
+      width 12px
+      padding-top 6px
+      line-height 24px
+      text-align center
+      font-size 10px
+      color #333333
+    .cart-add
+      display inline-block
+      padding 6px
+      line-height 24px
+      font-size 24px
+      color rgb(0,160,220)
+</style>
