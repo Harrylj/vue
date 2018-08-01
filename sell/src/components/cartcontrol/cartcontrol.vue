@@ -6,7 +6,7 @@
    </div>
    </transition>
    <div class="cart-count" v-show="food.count>0">{{food.count}}</div>
-   <div class="cart-add iconfont icon-jia" @click="addCart"></div>
+   <div class="cart-add iconfont icon-jia" @click="addCart($event)"></div>
  </div>
 </template>
 
@@ -31,9 +31,8 @@ export default {
       } else {
         this.food.count++
       }
-      // 这里可能是老版本
-      // this.$dispatch('cart.add', event.target)
-      this.$emit('cart.add', event.target)
+      // 子组件通过 $emit触发父组件的方法 increment
+      this.$emit('increment', event.target)
     },
     // 点击减少数量---b:这里因为BScroll插件默认组织了点击事件，需要去设置
     decreaseCart (event) {

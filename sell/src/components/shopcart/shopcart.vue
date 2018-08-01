@@ -18,7 +18,13 @@
       </div>
     </div>
     <div class="ball-container">
-      <div transition="drop" v-for="(ball,index) in balls" v-bind:key="index" v-show="ball.show" class="ball"></div>
+      <div v-for="(ball,index) in balls" v-bind:key="index">
+        <transition name="drop" v-on:before-enter="beforeEnter" v-on:enter="enter" v-on:after-enter="afterEnter">
+          <div v-show="ball.show" class="ball">
+            <div class="inner inner-hook"></div>
+          </div>
+        </transition>
+      </div>
     </div>
   </div>
 </template>
@@ -65,7 +71,9 @@ export default {
         {
           show: false
         }
-      ]
+      ],
+      // 下落的小球
+      dropBall: []
     }
   },
   computed: {
@@ -108,6 +116,53 @@ export default {
   methods: {
     drop (el) {
       console.log(el)
+      // 遍历balls
+      for (let i = 0; i < this.balls.lenght; i++) {
+        let ball = this.balls[i]
+        if (!ball.show) {
+          ball.show = true
+          ball.el = el
+          this.dropBall.push(ball)
+          return
+        }
+      }
+    },
+    beforeEnter (el) {
+      let count = this.balls.length
+      while (count--) {
+        let ball = this.balls(count)
+        if (ball.show) {
+          let rect = ball.el.getBoundingClientRect()
+          let x = rect.left - 32
+          let y = -(window.innetHeight - rect.top - 22)
+          el.style.display = ''
+          el.style.webkitTransform = `translate3d(0,${y}px,0)`
+          el.style.transform = `translate3d(0,${y}px,0)`
+          let inner = el.getElementsByClassName('inner-hook')[0]
+          inner.style.webkitTransform = `translate3d(${x}px,0,0)`
+          inner.style.transform = `translate3d(${x}px,0,0)`
+        }
+      }
+    },
+    enter (el) {
+      /* eslint-dosable no-unused-vars */
+      // 触发浏览器重绘
+      // let rf = el.offestHeight
+      this.$nextTick(() => {
+        el.style.display = ''
+        el.style.webkitTransform = 'translate3d(0,0,0)'
+        el.style.transform = 'translate3d(0,0,0)'
+        let inner = el.getElementsByClassName('inner-hook')[0]
+        inner.style.webkitTransform = 'translate3d(0,0,0)'
+        inner.style.transform = 'translate3d(0,0,0)'
+      })
+    },
+    afterEnter (el) {
+      let ball = this.dropBalls.shift()
+      if (ball) {
+        ball.show = false
+        el.style.display = 'none'
+      }
     }
   }
 }
@@ -207,7 +262,8 @@ export default {
       z-index 200
       &.drop-transition
         transition  all 0.4s
-        .inner
+      .inner
+          display inline-block
           width 16px
           height 16px
           border-radius 50%

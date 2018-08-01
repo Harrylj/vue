@@ -31,7 +31,7 @@
                       <span class="old" v-show="food.oldPrice">&yen;{{food.oldPrice}}</span>
                     </div>
                     <div class="cartcontrol-wrapper">
-                      <cartcontrol :food="food"></cartcontrol>
+                      <cartcontrol :food="food" @increment="_drop"></cartcontrol>
                     </div>
                   </div>
                 </li>
@@ -39,7 +39,7 @@
             </li>
           </ul>
         </div>
-        <shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
+        <shopcart ref="shopcart" :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
     </div>
 </template>
 
@@ -141,20 +141,17 @@ export default {
       }
       console.log(this.listHeight)
     },
-    // 动画球
+    // 动画球-----@increment绑定的方法
     _drop (target) {
-
+      // 体验优化，异步执行下落动画
+      this.$nextTick(() => {
+        this.$refs.shopcart.drop(target)
+      })
     }
   },
   components: {
     shopcart,
     cartcontrol
-  },
-  events: {
-    // 动画球
-    'cart.add' (target) {
-      this._drop(target)
-    }
   }
 }
 </script>
