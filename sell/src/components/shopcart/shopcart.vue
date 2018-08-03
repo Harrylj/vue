@@ -1,6 +1,6 @@
 <template>
   <div class="shopcart">
-    <div class="content">
+    <div class="content" @click="toggleList">
       <div class="content-left">
         <div class="logo-wrapper">
           <div class="logo" :class="{'highLight':totalCount>0}">
@@ -26,10 +26,33 @@
         </transition>
       </div>
     </div>
+    <transition name="fold">
+      <div class="shopcart-list" v-show="listShow">
+        <div class="list-header">
+          <h1 class="title">购物车</h1>
+          <span class="empty">清空</span>
+        </div>
+        <div class="list-content" ref="listContent">
+          <ul>
+            <li class="food" v-for="(food,index) in selectFoods" v-bind:key="index">
+              <span class="name">{{food.name}}</span>
+              <div class="price">
+                <span>￥{{food.price*food.count}}</span>
+              </div>
+              <div class="cartcontrol-wrapper">
+                <cartcontrol :food="food"></cartcontrol>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+import BScroll from 'better-scroll'
+import cartcontrol from '../../components/cartcontrol/cartcontrol'
 export default {
   // name: 'shopcart',
   props: {
@@ -73,7 +96,8 @@ export default {
         }
       ],
       // 下落的小球
-      dropBall: []
+      dropBalls: [],
+      fold: true
     }
   },
   computed: {
@@ -111,6 +135,47 @@ export default {
       } else {
         return 'enough'
       }
+    },
+    listShow () {
+      if (!this.totalCount) {
+        // this.fold = true
+        return false
+      }
+      let show = !this.fold
+      // 让购物车内的商品可滚动---2.0后computed属性内只能读取不能更改数据，不然会报错（使用watch监听属性来城改）
+      /*
+      if (show) {
+        this.$nextTick(() => {
+          if (!this.scroll) {
+            this.scroll = new BScroll(this.$refs.listContent, {
+              // ---a:这里BScroll插件默认阻止了点击，需要改变设置
+              click: true
+            })
+          } else {
+            // 这个好像是优化
+            this.scroll.refresh()
+          }
+        })
+      }
+      */
+      return show
+    }
+  },
+  watch: {
+    // 让购物车内的商品可滚动---2.0后computed属性内只能读取不能更改数据，不然会报错（使用watch监听属性来城改）
+    // 监听商品总数是个比较好的方法
+    totalCount: function () {
+      this.$nextTick(() => {
+        if (!this.scroll) {
+          this.scroll = new BScroll(this.$refs.listContent, {
+            // ---a:这里BScroll插件默认阻止了点击，需要改变设置
+            click: true
+          })
+        } else {
+          // 这个好像是优化
+          this.scroll.refresh()
+        }
+      })
     }
   },
   methods: {
@@ -163,7 +228,16 @@ export default {
         ball.show = false
         el.style.display = 'none'
       }
+    },
+    toggleList () {
+      if (!this.totalCount) {
+        return
+      }
+      this.fold = !this.fold
     }
+  },
+  components: {
+    cartcontrol
   }
 }
 </script>
@@ -269,4 +343,56 @@ export default {
           border-radius 50%
           background rgb(0,160,220)
           transition all 0.4s
+  .shopcart-list
+    position absolute
+    left 0
+    top 0
+    z-index 99
+    width 100%
+    transform translate3d(0, -100%, 0)
+    &.fold-enter-active, &.fold-leave-active {
+      transition: all 0.5s
+      transform translate3d(0, -100%, 0)
+    }
+    &.fold-enter, &.fold-leave-active {
+      transform translate3d(0, 0, 0)
+    }
+    .list-header
+      height 40px
+      line-height 40px
+      padding 0 18px
+      background #f3f5f7
+      border-bottom 1px solid rgba(7,17,27,0.1)
+      .title
+        float left
+        font-size 14px
+        color rgb(7,17,27)
+      .empty
+        float right
+    .list-content
+      padding 0 18px
+      max-height 217px
+      background #ffffff
+      overflow hidden
+      .food
+        position relative
+        padding 12px 0
+        box-sizing border-box
+        // border-1px(rgba(7,17,27,0.1))
+        .name
+          line-height 24px
+          font-size: 14px
+          color rgb(7,17,27)
+        .price
+          position absolute
+          right 90px
+          bottom 12px
+          line-height 24px
+          font-size 14px
+          font-weight 700
+          color rgb(240,20,20)
+        .cartcontrol-wrapper
+          position absolute
+          right 0
+          bottom 6px
 </style>
