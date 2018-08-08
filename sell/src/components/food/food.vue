@@ -70,8 +70,8 @@ export default {
   methods: {
     show () {
       this.showFlag = true
-      this.selectType = ALL
-      this.onlyContent = true
+      this.selectType = 2
+      this.onlyContent = false
       // 绑定滚动
       this.$nextTick(() => {
         if (!this.scroll) {
