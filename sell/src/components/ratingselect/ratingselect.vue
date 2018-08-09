@@ -1,11 +1,11 @@
 <template>
  <div class="ratingselect">
    <div class="rating-type border-1px">
-     <span class="block positive" @click="select(2,$event)" :class="{'active':selectType===2}" >{{desc.ALL}}<span class="count">{{ratings.length}}</span></span>
-     <span class="block positive" @click="select(0,$event)" :class="{'active':selectType===0}" >{{desc.POSITIVE}}<span class="count">{{positives.length}}</span></span>
-     <span class="block negative" @click="select(1,$event)" :class="{'active':selectType===1}" >{{desc.NEGATIVE}}<span class="count">{{negatives.length}}</span></span>
+     <span class="block positive" @click="select(2,$event)" :class="{'active':myselectType===2}" >{{desc.ALL}}<span class="count">{{ratings.length}}</span></span>
+     <span class="block positive" @click="select(0,$event)" :class="{'active':myselectType===0}" >{{desc.POSITIVE}}<span class="count">{{positives.length}}</span></span>
+     <span class="block negative" @click="select(1,$event)" :class="{'active':myselectType===1}" >{{desc.NEGATIVE}}<span class="count">{{negatives.length}}</span></span>
    </div>
-   <div class="switch"  @click="toggleContent($event)" :class="{'on':onlyContent}">
+   <div class="switch"  @click="toggleContent($event)" :class="{'on':myonlyContent}">
      <span class="iconfont icon-gou iconfont_circle"></span>
      <span class="text">查看评论内容</span>
    </div>
@@ -43,10 +43,10 @@ export default {
       }
     }
   },
-   data () {
+  data () {
     return {
-      selectType: this.selectType,
-      onlyContent: this.onlyContent
+      myselectType: this.selectType,
+      myonlyContent: this.onlyContent
     }
   },
   computed: {
@@ -66,7 +66,8 @@ export default {
       if (!event._constructed) {
         return
       }
-      this.selectType = type
+      this.myselectType = type
+      // console.log(this.myselectType,this.selectType)
       // 子组件传递给父组件
       this.$emit('increment', 'selectType', type)
     },
@@ -74,7 +75,7 @@ export default {
       if (!event._constructed) {
         return
       }
-      this.onlyContent = !this.onlyContent
+      this.myonlyContent = !this.onlyContent
       this.$emit('increment', 'onlyContent', this.onlyContent)
     }
   },
