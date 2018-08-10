@@ -75,8 +75,9 @@ export default {
       if (!event._constructed) {
         return
       }
-      this.myonlyContent = !this.onlyContent
-      this.$emit('increment', 'onlyContent', this.onlyContent)
+      this.myonlyContent = !this.myonlyContent
+      this.$emit('increment', 'onlyContent', this.myonlyContent)
+      console.log(this.myonlyContent)
     }
   },
   components: {

@@ -36,14 +36,14 @@
           <ratingselect :select-type="selectType" :only-content="onlyContent" :desc="desc" :ratings="food.ratings"></ratingselect>
           <div class="rating-wrapper">
             <ul v-show="food.ratings && food.ratings.length">
-              <li v-for="(rating,index) in food.ratings" v-bind:key="index" class="raging-item">
+              <li v-show="needShow(rating.rateType,rating.text)" v-for="(rating,index) in food.ratings" v-bind:key="index" class="rating-item border-1px">
                 <div class="user">
                   <span class="name">{{rating.username}}</span>
                   <img class="avatar" width="12" height="12px" :src="rating.avatar">
                 </div>
                 <div class="time">{{rating.rateTime}}</div>
                 <p class="text">
-                  <span :class="{'icon-damuzhi':rating.rateType===0,'icon-down':rating.rateType===1}"></span>
+                  <span class="iconfont" :class="{'icon-damuzhi':rating.rateType===0,'icon-down':rating.rateType===1}"></span>
                 </p>
               </li>
             </ul>
@@ -85,8 +85,8 @@ export default {
   methods: {
     show () {
       this.showFlag = true
-      this.selectType = 2
-      this.onlyContent = false
+      this.selectType = ALL
+      this.onlyContent = true
       // 绑定滚动
       this.$nextTick(() => {
         if (!this.scroll) {
@@ -114,6 +114,26 @@ export default {
       }
       console.log(event.target)
       // this.$dispatch('cart.add',event.target)
+    },
+    // 点击 全部 满意 吐槽 筛选显示内容
+    needShow (type, text) {
+      console.log(this.selectType,this.onlyContent)
+      if (this.onlyContent && !text) {
+        return false
+      }
+      if (this.selectType === ALL) {
+        return true
+      } else {
+        return type === this.selectType
+      }
+    }
+  },
+  events: {
+    'ratingtype.select' (type) {
+      this.selectType = true
+    },
+    'content.toggle' (onlyContent) {
+      this.onlyContent = onlyContent
     }
   },
   components: {
@@ -124,6 +144,7 @@ export default {
 }
 </script>
 <style scoped lang="stylus" rel="stylesheet/stylus">
+@import "../../common/stylus/mixin"
   .food
     position fixed
     left 0
@@ -228,4 +249,41 @@ export default {
         margin-left 18px
         font-size 14px
         color rgb(7,17,27)
+      .rating-wrapper
+        padding 0 18px
+        .rating-item
+          position relative
+          padding 16px 0
+          border-1px(rgba(7,17,27,0.1))
+          .user
+            position absolute
+            right 0
+            top 16px
+            line-height 12px
+            font-size 0
+            .name
+              display inline-block
+              margin-right 6px
+              vertical-align top
+              font-size 10px
+              color rgb(147,153,159)
+            .avatar
+              border-radius 50%
+          .time
+            margin-bottom 6px
+            line-height 12px
+            font-size 10px
+            color rgb(147,153,159)
+          .text
+            line-height 16px
+            font-size 12px
+            color rgb(7,17,27)
+            .icon-damuzhi,.icon-down
+              margin-right 4px
+              line-height 24px
+              font-size 12px
+            .icon-damuzhi
+              color rgb(0,168,220)
+            .icon-down
+              color rgb(147,153,159)
 </style>
