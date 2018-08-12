@@ -5,9 +5,11 @@
      <span class="block positive" @click="select(0,$event)" :class="{'active':myselectType===0}" >{{desc.POSITIVE}}<span class="count">{{positives.length}}</span></span>
      <span class="block negative" @click="select(1,$event)" :class="{'active':myselectType===1}" >{{desc.NEGATIVE}}<span class="count">{{negatives.length}}</span></span>
    </div>
+   <div>{{desc}}------{{ratings}}</div>
+   <div>是什么{{onlyContent}}</div>
    <div class="switch"  @click="toggleContent($event)" :class="{'on':myonlyContent}">
      <span class="iconfont icon-gou iconfont_circle"></span>
-     <span class="text">查看评论内容</span>
+     <span class="text">查看评论内容{{onlyContent}}</span>
    </div>
  </div>
 </template>
@@ -25,12 +27,12 @@ export default {
       }
     },
     selectType: {
-      type: Number,
-      default: ALL
+      // type: Number,
+      // default: ALL
     },
     onlyContent: {
-      type: Boolean,
-      default: false
+      // type: Boolean,
+      // default: false
     },
     desc: {
       type: Object,
@@ -46,7 +48,7 @@ export default {
   data () {
     return {
       myselectType: this.selectType,
-      myonlyContent: this.onlyContent
+      myonlyContent: this.onlyContent,
     }
   },
   computed: {
@@ -67,17 +69,17 @@ export default {
         return
       }
       this.myselectType = type
-      // console.log(this.myselectType,this.selectType)
       // 子组件传递给父组件
-      this.$emit('increment', 'selectType', type)
+      this.$emit('select-type', type)
+      // console.log(this.myselectType, this.selectType,this.abc)
     },
     toggleContent (event) {
       if (!event._constructed) {
         return
       }
       this.myonlyContent = !this.myonlyContent
-      this.$emit('increment', 'onlyContent', this.myonlyContent)
-      console.log(this.myonlyContent)
+      this.$emit('only-content', this.myonlyContent)
+      // console.log(this.myonlyContent)
     }
   },
   components: {

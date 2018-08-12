@@ -33,10 +33,11 @@
         <split></split>
         <div class="rating">
           <h1 class="title">商品评价</h1>
-          <ratingselect :select-type="selectType" :only-content="onlyContent" :desc="desc" :ratings="food.ratings"></ratingselect>
+          <ratingselect @select-type="selectTypeVal" @only-content="onlyContentVal" :desc="desc" :ratings="food.ratings" :onlyContent="onlyContent"></ratingselect>
+          <div>{{selectType}}---abc={{abc}}----onlyContent={{onlyContent}}</div>
           <div class="rating-wrapper">
             <ul v-show="food.ratings && food.ratings.length">
-              <li v-show="needShow(rating.rateType,rating.text)" v-for="(rating,index) in food.ratings" v-bind:key="index" class="rating-item border-1px">
+              <li v-show="needShow(rating.rateType,rating.text)"  v-for="(rating,index) in food.ratings" v-bind:key="index" class="rating-item border-1px">
                 <div class="user">
                   <span class="name">{{rating.username}}</span>
                   <img class="avatar" width="12" height="12px" :src="rating.avatar">
@@ -44,6 +45,7 @@
                 <div class="time">{{rating.rateTime}}</div>
                 <p class="text">
                   <span class="iconfont" :class="{'icon-damuzhi':rating.rateType===0,'icon-down':rating.rateType===1}"></span>
+                  <span>{{rating.text}}</span>
                 </p>
               </li>
             </ul>
@@ -79,7 +81,8 @@ export default {
         ALL: '全部',
         POSITIVE: '推荐',
         NEGATIVE: '吐槽'
-      }
+      },
+      abc :123
     }
   },
   methods: {
@@ -113,11 +116,22 @@ export default {
         this.food.count++
       }
       console.log(event.target)
+      console.log(this.selectType, this.onlyContent)
       // this.$dispatch('cart.add',event.target)
     },
     // 点击 全部 满意 吐槽 筛选显示内容
     needShow (type, text) {
-      console.log(this.selectType,this.onlyContent)
+      console.log(type, text,this.selectType)
+      // 如果相等则显示
+      if (type==this.selectType) {
+        return true
+      }else if(this.selectType<type){
+        return true
+      }
+      else{
+        return false
+      }
+      /*
       if (this.onlyContent && !text) {
         return false
       }
@@ -126,6 +140,20 @@ export default {
       } else {
         return type === this.selectType
       }
+      */
+     if (this.onlyContent) {
+       return this.onlyContent
+     }
+    },
+    //
+    selectTypeVal: function (type) {
+      this.selectType = type
+      this.abc = 11111
+      alert(type)
+    },
+    onlyContentVal (bb) {
+      this.onlyContent = bb
+      alert(bb)
     }
   },
   events: {
