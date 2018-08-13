@@ -34,22 +34,21 @@
         <div class="rating">
           <h1 class="title">商品评价</h1>
           <ratingselect @select-type="selectTypeVal" @only-content="onlyContentVal" :desc="desc" :ratings="food.ratings" :onlyContent="onlyContent"></ratingselect>
-          <div>{{selectType}}---abc={{abc}}----onlyContent={{onlyContent}}</div>
           <div class="rating-wrapper">
-            <ul v-show="food.ratings && food.ratings.length">
+            <ul v-show="onlyContent">
               <li v-show="needShow(rating.rateType,rating.text)"  v-for="(rating,index) in food.ratings" v-bind:key="index" class="rating-item border-1px">
                 <div class="user">
                   <span class="name">{{rating.username}}</span>
                   <img class="avatar" width="12" height="12px" :src="rating.avatar">
                 </div>
-                <div class="time">{{rating.rateTime}}</div>
+                <div class="time">{{rating.rateTime | formatDate}}</div>
                 <p class="text">
                   <span class="iconfont" :class="{'icon-damuzhi':rating.rateType===0,'icon-down':rating.rateType===1}"></span>
                   <span>{{rating.text}}</span>
                 </p>
               </li>
             </ul>
-            <div class="no-rating" v-show="!food.ratings || !food.ratings.length"></div>
+            <div class="no-rating" v-show="!food.ratings || !food.ratings.length">暂无评价</div>
           </div>
         </div>
       </div>
@@ -60,6 +59,7 @@
 <script type="text/ecmascript-6">
 import BScroll from 'better-scroll'
 import Vue from 'vue'
+import {formatDate} from '../../common/js/date'
 import cartcontrol from '../../components/cartcontrol/cartcontrol'
 import split from '../../components/split/split'
 import ratingselect from '../../components/ratingselect/ratingselect'
@@ -81,8 +81,7 @@ export default {
         ALL: '全部',
         POSITIVE: '推荐',
         NEGATIVE: '吐槽'
-      },
-      abc :123
+      }
     }
   },
   methods: {
@@ -104,7 +103,6 @@ export default {
     hide () {
       this.showFlag = false
     },
-    //
     addFirst (event) {
       // 防止多次点击
       if (!event._constructed) {
@@ -115,45 +113,31 @@ export default {
       } else {
         this.food.count++
       }
-      console.log(event.target)
-      console.log(this.selectType, this.onlyContent)
-      // this.$dispatch('cart.add',event.target)
     },
     // 点击 全部 满意 吐槽 筛选显示内容
     needShow (type, text) {
-      console.log(type, text,this.selectType)
-      // 如果相等则显示
-      if (type==this.selectType) {
-        return true
-      }else if(this.selectType<type){
-        return true
-      }
-      else{
-        return false
-      }
-      /*
-      if (this.onlyContent && !text) {
-        return false
-      }
+      // 异步更新 bscroll
+      this.$nextTick(() => {
+        this.scroll.refresh()
+      })
+      // 全部
       if (this.selectType === ALL) {
         return true
-      } else {
-        return type === this.selectType
       }
-      */
-     if (this.onlyContent) {
-       return this.onlyContent
-     }
+      // 推荐
+      if (type === this.selectType) {
+        return true
+      } else {
+        return false
+      }
     },
-    //
+    // 接收子组件的传值
     selectTypeVal: function (type) {
       this.selectType = type
-      this.abc = 11111
-      alert(type)
     },
+    // 接收子组件的传值
     onlyContentVal (bb) {
       this.onlyContent = bb
-      alert(bb)
     }
   },
   events: {
@@ -162,6 +146,13 @@ export default {
     },
     'content.toggle' (onlyContent) {
       this.onlyContent = onlyContent
+    }
+  },
+  filters: {
+    // 日期格式化 ---需要引入date.js文件
+    formatDate (time) {
+      let date = new Date(time)
+      return formatDate(date, 'yyyy-MM-dd hh:mm')
     }
   },
   components: {
@@ -314,4 +305,8 @@ export default {
               color rgb(0,168,220)
             .icon-down
               color rgb(147,153,159)
+        .no-rating
+          padding: 16px 0
+          font-size 12px
+          color: rgb(147,153,159)
 </style>
