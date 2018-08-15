@@ -1,5 +1,5 @@
 <template>
-    <div class="ratings">
+    <div class="ratings" ref="ratings">
       <div class="ratings-content">
         <div class="overview">
           <div class="overview-left">
@@ -27,8 +27,8 @@
         <split></split>
         <ratingselect @select-type="selectTypeVal" @only-content="onlyContentVal" :ratings="ratings" :onlyContent="onlyContent"></ratingselect>
         <div class="rating-wrapper">
-          <ul>
-            <li v-for="(rating,index) in ratings" v-bind:key="index"  class="rating-item">
+          <ul v-show="onlyContent">
+            <li v-for="(rating,index) in ratings" v-bind:key="index" v-show="needShow(rating.rateType,rating.text)"  class="rating-item">
               <div class="avatar">
                 <img width="28" height="28" :src="rating.avatar">
               </div>
@@ -41,7 +41,7 @@
                 <p class="text">{{rating.text}}</p>
                 <div class="recommend" v-show="rating.recommend && rating.recommend.length">
                   <span class="iconfont icon-damuzhi"></span>
-                  <span v-for="(item,index) in rating.recommend" v-bind:key="index">{{item}}</span>
+                  <span class="item" v-for="(item,index) in rating.recommend" v-bind:key="index">{{item}}</span>
                 </div>
                 <div class="time">
                   {{rating.rateTime | formatDate}}
@@ -55,6 +55,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+import BScroll from 'better-scroll'
 import star from '../../components/star/star'
 import split from '../../components/split/split'
 import ratingselect from '../../components/ratingselect/ratingselect'
@@ -79,10 +80,40 @@ export default {
       response = response.body
       if (response.errno === ERR_OK) {
         this.ratings = response.data
+        this.$nextTick(() => {
+          this.scroll = new BScroll(this.$refs.ratings, {
+            click: true
+          })
+        })
       }
     })
   },
+  events: {
+    'ratingtype.select' (type) {
+      this.selectType = true
+    },
+    'content.toggle' (onlyContent) {
+      this.onlyContent = onlyContent
+    }
+  },
   methods: {
+    // 点击 全部 满意 吐槽 筛选显示内容
+    needShow (type, text) {
+      // 异步更新 bscroll
+      this.$nextTick(() => {
+        this.scroll.refresh()
+      })
+      // 全部
+      if (this.selectType === ALL) {
+        return true
+      }
+      // 推荐
+      if (type === this.selectType) {
+        return true
+      } else {
+        return false
+      }
+    },
     // 接收子组件的传值
     selectTypeVal: function (type) {
       this.selectType = type
@@ -177,4 +208,64 @@ export default {
             margin-left 10px
             font-size 12px
             color rgb(147,153,159)
+    .rating-wrapper
+      padding 0 18px
+      .rating-item
+        display: flex
+        padding 18px 0
+        border-1px(rgba(7,17,27,0.1))
+        .avatar
+          flex 0 0 28px
+          width 28px
+          margin-right 12px
+          img
+            border-radius 50%
+        .content
+          position relative
+          flex 1
+          .name
+            margin-bottom 4px
+            line-height 12px
+            font-size 10px
+            color rgb(7,17,27)
+          .star-wrapper
+            margin-bottom 6px
+            font-size 0
+            .star
+              display inline-block
+              margin-right 6px
+              vertical-align top
+            .delivery
+              display inline-block
+              vertical-align top
+              line-height 12px
+              font-size 10px
+              color rgb(147,153,159)
+    .text
+      margin-bottom 8px
+      line-height 18px
+      color rgb(7,17,27)
+      font-size 12px
+    .recommend
+      line-height 16px
+      font-size 0
+      .icon-damuzhi,.item
+        display inline-block
+        margin 0 8px 4px 0
+        font-size 9px
+      .icon-damuzhi
+        color rgb(0,160,220)
+      .item
+        padding 0 6px
+        border 1px solid rgba(7,17,27,0.1)
+        border-radius 1px
+        color rgb(147,153,159)
+        background-color #fff
+    .time
+      position absolute
+      top 0
+      right 0
+      line-height 12px
+      font-size 10px
+      color #ccc
 </style>
