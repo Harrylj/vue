@@ -2,7 +2,7 @@
     <div class="seller">
       <div class="seller-content">
         <div class="overview">
-          <h1 class="title"></h1>
+          <h1 class="title">{{seller.name}}</h1>
           <div class="desc border-1px">
             <star :size="36" :score="seller.score"></star>
             <span class="text">{{seller.ratingCount}}</span>
@@ -29,12 +29,27 @@
             </li>
           </ul>
         </div>
+        <split></split>
+        <div class="bulletin">
+          <h1 class="title">公告与活动</h1>
+          <div class="content-wrapper">
+            <p class="content">{{seller.bulletin}}</p>
+          </div>
+          <ul v-if="seller.supports" class="supports">
+              <li class="support-item border-1px" v-for="(item, index) in seller.supports" v-bind:key="item.index" >
+                <span class="icon" :class="classMap[seller.supports[index].type]"></span>
+                <span class="text">{{seller.supports[index].description}}</span>
+                <span>{{item.$index}}</span>
+              </li>
+          </ul>
+        </div>
       </div>
     </div>
 </template>
 
 <script type="text/ecmascript-6">
 import star from '../../components/star/star'
+import split from '../../components/split/split'
 export default {
   name: 'seller',
   props: {
@@ -47,8 +62,12 @@ export default {
       msg: 'seller !! Welcome to Your Vue.js App 2018-04-10'
     }
   },
+  created () {
+    this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
+  },
   components: {
-    star
+    star,
+    split
   }
 }
 </script>
@@ -104,4 +123,21 @@ export default {
             color rgb(7,17,27)
             .stress
               font-size 24px
+    .bulletin
+      padding 18px 18px 0 18px
+      .title
+        margin-bottom 8px
+        line-heihgt 14px
+        color rgb(7,17,27)
+        font-size 14px
+      .content-wrapper
+        padding 0 12px 16px 12px
+        border-1px(rgba(7,17,27,0.1))
+        .content
+          line-height 24px
+          font-size 12px
+          color rgb(240,20,20)
+      .supports
+        .support-item
+          padding 16px 12px
 </style>
