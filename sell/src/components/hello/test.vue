@@ -1,16 +1,14 @@
 <template>
   <div class="hello" ref="hello">
-    <div class="hello-content">
-      <div class="hc-left" ref="hc_left">
-        <ul>
-          <li v-for="(number,index) of num" v-bind:key="index">{{number}}</li>
-        </ul>
-      </div>
-      <div class="hc-right" ref="hc_right">
-        <ul>
-          <li v-for="(number,index) of num" v-bind:key="index">{{number}}{{number}}</li>
-        </ul>
-      </div>
+    <div class="hc-left" ref="hc_left">
+      <ul>
+        <li v-for="(number,index) of num" v-bind:key="index">{{number}}</li>
+      </ul>
+    </div>
+    <div class="hc-right" ref="hc_right">
+      <ul>
+        <li v-for="(number,index) of num" v-bind:key="index">{{number}}{{number}}</li>
+      </ul>
     </div>
   </div>
 </template>
@@ -29,9 +27,9 @@ export default {
   },
   created () {
     this.$nextTick(() => {
-      this.scroll = new BScroll(this.$refs.hello, {
-        click: true
-      })
+      // this.scroll = new BScroll(this.$refs.hello, {
+      //   click: true
+      // })
       this.scroll_left = new BScroll(this.$refs.hc_left, {
         click: true
       })
@@ -51,6 +49,7 @@ export default {
   left: 0;
   bottom: 0;
   width: 100%;
+  display: flex;
   overflow: hidden;
 }
 ul {
@@ -68,7 +67,7 @@ a {
   color: #42b983;
 }
 .hello-content{
-  display: flex
+  display: flex;
 }
 .hc-left{
   width: 100px;
