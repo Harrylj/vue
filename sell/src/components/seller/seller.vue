@@ -1,6 +1,6 @@
 <template>
-    <div class="seller">
-      <div class="seller-content">
+    <div class="seller" ref="seller">
+      <div class="seller-content content">
         <div class="overview">
           <h1 class="title">{{seller.name}}</h1>
           <div class="desc border-1px">
@@ -50,6 +50,8 @@
 <script type="text/ecmascript-6">
 import star from '../../components/star/star'
 import split from '../../components/split/split'
+import BScroll from 'better-scroll'
+// const aawrapper = document.querySelector('.seller')
 export default {
   name: 'seller',
   props: {
@@ -57,13 +59,26 @@ export default {
       type: Object
     }
   },
+  /*
   data () {
     return {
       msg: 'seller !! Welcome to Your Vue.js App 2018-04-10'
     }
   },
+  */
   created () {
     this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
+    this.$http.get('/api/seller').then((response) => {
+      response = response.body
+      if (response.errno === 0) {
+        // this.seller = response.data
+        this.$nextTick(() => {
+          this.scroll = new BScroll(this.$refs.seller, {
+            click: true
+          })
+        })
+      }
+    })
   },
   components: {
     star,
@@ -140,4 +155,24 @@ export default {
       .supports
         .support-item
           padding 16px 12px
+          border-1px(rgba(7,17,27,0.1))
+          font-size 0
+        .icon
+          display: inline-block
+          vertical-align: top
+          width: 16px
+          height: 16px
+          margin-right: 6px
+          background-size: 16px 16px
+          background-repeat: no-repeat
+          &.decrease
+            bg-image('decrease_4')
+          &.discount
+            bg-image('discount_4')
+          &.guarantee
+            bg-image('guarantee_4')
+          &.invoice
+            bg-image('invoice_4')
+          &.special
+            bg-image('special_4')
 </style>

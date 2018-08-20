@@ -12,6 +12,9 @@
           <div class="tab-item">
               <router-link to="/seller">商家</router-link>
           </div>
+          <div class="tab-item">
+              <router-link to="/test">测试</router-link>
+          </div>
       </div>
       <!-- 路由匹配到的组件将渲染在这里 -->
       <router-view :seller="seller"></router-view>
