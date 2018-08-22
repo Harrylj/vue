@@ -1,19 +1,20 @@
 <template>
   <div class="hello" ref="hello">
+    <button @click="abc">abc</button>
     <div class="hc-left" ref="hc_left">
       <ul>
-        <li v-for="(number,index) of num" v-bind:key="index">{{number}}</li>
+        <li class="left-list" v-for="(number,index) of num" @click="clickMove(index)" v-bind:key="index">{{number}}</li>
       </ul>
     </div>
     <div class="hc-right" ref="hc_right">
       <ul>
-        <li v-for="(number,index) of num" v-bind:key="index">{{number}}{{number}}</li>
+        <li class="right-list" v-for="(number,index) of num" v-bind:key="index">{{number}}{{number}}</li>
       </ul>
     </div>
   </div>
 </template>
-
 <script>
+// 首先获取是第几个元素。再获取元素的高度。把之前元素的高度加起来
 import BScroll from 'better-scroll'
 export default {
   name: 'test222222',
@@ -34,9 +35,28 @@ export default {
         click: true
       })
       this.scroll_right = new BScroll(this.$refs.hc_right, {
-        click: true
+        click: true,
+        // 滚动的探针
+        probeType: 3
+      })
+      // 滚动时获取到Y值
+      this.scroll_right.on('scroll', (pos) => {
+        this.scrollY = Math.abs(Math.round(pos.y))
+        console.log(this.scrollY)
+        console.log(this.scroll_right.y)
       })
     })
+  },
+  methods: {
+    abc () {
+      let el = document.getElementsByClassName('right-list')
+      this.scroll_right.scrollToElement(el[8], 300)
+    },
+    clickMove (index) {
+      let speed = 300
+      let el = document.getElementsByClassName('right-list')
+      this.scroll_right.scrollToElement(el[index], speed)
+    }
   }
 }
 </script>
