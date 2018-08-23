@@ -106,13 +106,11 @@ export default {
     }
   },
   methods: {
-    // 点击菜单左侧，右侧滑动到对应位置---a:这里因为BScroll插件默认组织了点击事件，需要去设置
+    // 点击菜单左侧，右侧滑动到对应位置---a:这里因为BScroll插件默认阻止了点击事件，需要去设置
     selectMenu (index, event) {
       let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook')
       let el = foodList[index]
       this.foodsScroll.scrollToElement(el, 300)
-      console.log(index)
-      console.log(event)
     },
     // goods左右侧的滚动
     _initScroll () {
@@ -124,7 +122,7 @@ export default {
       this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
         // ---cartcontrol.vue---b:这里BScroll插件默认阻止了点击，需要改变设置
         click: true,
-        // 滚动的探针
+        // 滚动的探针--加了以后才可以获取到滚动的Y值
         probeType: 3
       })
       // 滚动时获取到Y值

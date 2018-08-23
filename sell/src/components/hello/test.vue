@@ -1,9 +1,8 @@
 <template>
-  <div class="hello" ref="hello">
-    <button @click="abc">abc</button>
+  <div class="hello">
     <div class="hc-left" ref="hc_left">
       <ul>
-        <li class="left-list" v-for="(number,index) of num" @click="clickMove(index)" v-bind:key="index">{{number}}</li>
+        <li class="left-list" :class="{'current':current == index}" v-for="(number,index) of num" @click="clickMove(index)" v-bind:key="index">{{number}}</li>
       </ul>
     </div>
     <div class="hc-right" ref="hc_right">
@@ -14,53 +13,72 @@
   </div>
 </template>
 <script>
-// 首先获取是第几个元素。再获取元素的高度。把之前元素的高度加起来
 import BScroll from 'better-scroll'
 export default {
-  name: 'test222222',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App  2018-04-08',
-      loading: false,
-      error: null,
-      num: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+      num: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+      // 高度数组
+      heightArr: [],
+      // 速度
+      speed: 300,
+      // 当前index
+      current: 0
     }
   },
   created () {
     this.$nextTick(() => {
-      // this.scroll = new BScroll(this.$refs.hello, {
-      //   click: true
-      // })
       this.scroll_left = new BScroll(this.$refs.hc_left, {
+        // 允许执行点击事件
         click: true
       })
       this.scroll_right = new BScroll(this.$refs.hc_right, {
+        // 允许执行点击事件
         click: true,
-        // 滚动的探针
+        // 滚动的探针---加了这个才能在滚动时获取到数据
         probeType: 3
       })
-      // 滚动时获取到Y值
+      // 右侧滚动时获取到Y值
       this.scroll_right.on('scroll', (pos) => {
+        // 取整的绝对值
         this.scrollY = Math.abs(Math.round(pos.y))
-        console.log(this.scrollY)
-        console.log(this.scroll_right.y)
+        let i = 0
+        let el = document.getElementsByClassName('left-list')
+        // 比较数组大小，得出对应的index
+        for (i; i < this.heightArr.length; i++) {
+          // 当大于时则跳出循环
+          if (this.scrollY < this.heightArr[i]) {
+            // 跳出循环
+            break
+          }
+        }
+        // 左侧滚动到与右侧对应的位置
+        this.scroll_left.scrollToElement(el[i],this.speed)
+        this.current = i
       })
+      // 调用右侧的高度数组
+      this._calculateHeight()
     })
   },
   methods: {
-    abc () {
-      let el = document.getElementsByClassName('right-list')
-      this.scroll_right.scrollToElement(el[8], 300)
-    },
+    // 点击左侧跳转到对应位置
     clickMove (index) {
-      let speed = 300
       let el = document.getElementsByClassName('right-list')
-      this.scroll_right.scrollToElement(el[index], speed)
+      this.scroll_right.scrollToElement(el[index], this.speed)
+      this.current = index
+    },
+    // 计算右侧的高度数组
+    _calculateHeight () {
+      let el = document.getElementsByClassName('right-list')
+      let heightAll = 0
+      for (let i = 0; i < el.length; i++) {
+        heightAll = heightAll + el[i].clientHeight
+        this.heightArr.push(heightAll)
+      }
     }
   }
 }
 </script>
-
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .hello{
@@ -98,5 +116,12 @@ a {
 }
 .hc-right li{
   line-height: 100px
+}
+.right-list:nth-child(2n+1){
+  line-height: 200px
+}
+.hc-left .current{
+  background-color: red;
+  color: white;
 }
 </style>
