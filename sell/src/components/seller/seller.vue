@@ -43,6 +43,18 @@
               </li>
           </ul>
         </div>
+        <split></split>
+        <p>{{seller.pics}}</p>
+        <div class="pics">
+          <h1 class="title">商家实景</h1>
+          <div class="pic-wrapper" ref="picWrapper">
+            <ul class="pic-list" ref="picList">
+              <li class="pic-item" v-for="(pic,index) in seller.pics" v-bind:key="index" >
+                <img :src="pic" width="120" height="90" alt="">
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
 </template>
@@ -72,13 +84,48 @@ export default {
       response = response.body
       if (response.errno === 0) {
         // this.seller = response.data
+        // 加载BScroll
         this.$nextTick(() => {
           this.scroll = new BScroll(this.$refs.seller, {
             click: true
           })
+          // 加载图片滚动
+          if (this.seller.pics) {
+            let picWidth = 120
+            let margin = 6
+            let width = (picWidth + margin) * this.seller.pics.length - margin
+            // console.log(this.$refs.picList)
+            this.$refs.picList.style.width = width + 'px'
+            this.picScroll = new BScroll(this.$refs.picWrapper, {
+              click: true,
+              scrollX: true,
+              eventPassthrough: 'vertical'
+            })
+          } else {
+            alert(2)
+          }
         })
       }
     })
+  },
+  watch: {
+  },
+  mounted () {
+    /*
+    this.$nextTick(() => {
+      alert(this.seller.pics)
+      if (this.seller.pics) {
+        let picWidth = 120
+        let margin = 6
+        // let width = (picWidth+ margin) * this.seller.pics.length -margin
+        console.log(this.seller)
+      } else {
+        alert(2)
+      }
+    })
+    */
+  },
+  methods: {
   },
   components: {
     star,
@@ -157,6 +204,8 @@ export default {
           padding 16px 12px
           border-1px(rgba(7,17,27,0.1))
           font-size 0
+          &:last-child
+           border-none()
         .icon
           display: inline-block
           vertical-align: top
@@ -175,4 +224,28 @@ export default {
             bg-image('invoice_4')
           &.special
             bg-image('special_4')
+        .text
+          line-height 16px
+          font-size 12px
+          color rgb(7,17,27)
+    .pics
+      padding 18px
+      .title
+        margin-bottom 12px
+        line-height 14px
+        color rgb(7,17,27)
+        font-size 14px
+      .pic-wrapper
+        width 100%
+        overflow hidden
+        white-space nowrap
+        .pic-list
+          font-size 0
+          .pic-item
+            display inline-block
+            margin-right 6px
+            width 120px
+            height 90px
+            &:last-child
+              margin 0
 </style>

@@ -53,7 +53,7 @@ export default {
           }
         }
         // 左侧滚动到与右侧对应的位置
-        this.scroll_left.scrollToElement(el[i],this.speed)
+        this.scroll_left.scrollToElement(el[i], this.speed)
         this.current = i
       })
       // 调用右侧的高度数组
