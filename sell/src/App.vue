@@ -22,13 +22,22 @@
 </template>
 
 <script type="text/ecmascript-6">
+// 引入解析url参数
+import {urlParse} from './common/js/myutil'
 import header from './components/header/header'
 const ERR_OK = 0
 export default {
   name: 'App',
   data () {
     return {
-      seller: {}
+      seller: {
+        // 获取店铺id
+        id: (() => {
+          let queryParam = urlParse()
+          console.log(queryParam)
+          return queryParam.id
+        })()
+      }
     }
   },
   created () {

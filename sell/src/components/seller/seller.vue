@@ -28,6 +28,10 @@
               </div>
             </li>
           </ul>
+          <div class="favorite" @click="toggleFavorite">
+            <span class="iconfont icon-aixin" :class="{'active':favorite}"></span>
+            <span class="text">{{favoriteText}}</span>
+          </div>
         </div>
         <split></split>
         <div class="bulletin">
@@ -44,7 +48,6 @@
           </ul>
         </div>
         <split></split>
-        <p>{{seller.pics}}</p>
         <div class="pics">
           <h1 class="title">商家实景</h1>
           <div class="pic-wrapper" ref="picWrapper">
@@ -55,6 +58,13 @@
             </ul>
           </div>
         </div>
+        <split></split>
+        <div class="info">
+          <h1 class="title border-1px">商家信息</h1>
+          <ul>
+            <li class="info-item" v-for="(info,index) in seller.infos" v-bind:key="index">{{info}}</li>
+          </ul>
+        </div>
       </div>
     </div>
 </template>
@@ -63,7 +73,6 @@
 import star from '../../components/star/star'
 import split from '../../components/split/split'
 import BScroll from 'better-scroll'
-// const aawrapper = document.querySelector('.seller')
 export default {
   name: 'seller',
   props: {
@@ -71,13 +80,16 @@ export default {
       type: Object
     }
   },
-  /*
   data () {
     return {
-      msg: 'seller !! Welcome to Your Vue.js App 2018-04-10'
+      favorite: false
     }
   },
-  */
+  computed: {
+    favoriteText () {
+      return this.favorite ? '已收藏' : '收藏'
+    }
+  },
   created () {
     this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
     this.$http.get('/api/seller').then((response) => {
@@ -97,9 +109,11 @@ export default {
             // console.log(this.$refs.picList)
             this.$refs.picList.style.width = width + 'px'
             this.picScroll = new BScroll(this.$refs.picWrapper, {
+              // 允许点击事件
               click: true,
-              scrollX: true,
-              eventPassthrough: 'vertical'
+              // 水平滚动
+              scrollX: true
+              // eventPassthrough: 'vertical'
             })
           } else {
             alert(2)
@@ -111,21 +125,14 @@ export default {
   watch: {
   },
   mounted () {
-    /*
-    this.$nextTick(() => {
-      alert(this.seller.pics)
-      if (this.seller.pics) {
-        let picWidth = 120
-        let margin = 6
-        // let width = (picWidth+ margin) * this.seller.pics.length -margin
-        console.log(this.seller)
-      } else {
-        alert(2)
-      }
-    })
-    */
   },
   methods: {
+    toggleFavorite (event) {
+      if (!event._constructed) {
+        return
+      }
+      this.favorite = !this.favorite
+    }
   },
   components: {
     star,
@@ -145,6 +152,7 @@ export default {
     overflow hidden
     .overview
       padding 18px
+      position relative
       .title
         margin-bottom 8px
         line-height
@@ -185,6 +193,24 @@ export default {
             color rgb(7,17,27)
             .stress
               font-size 24px
+      .favorite
+        position absolute
+        width 50px
+        right 5px
+        top 18px
+        text-align center
+        .icon-aixin
+          display block
+          margin-bottom 4px
+          line-height 24px
+          font-size 24px
+          color #d4d6d9
+          &.active
+            color rgb(240,20,20)
+        .text
+          line-height 10px
+          font-size 10px
+          color rgb(77,85,93)
     .bulletin
       padding 18px 18px 0 18px
       .title
@@ -248,4 +274,19 @@ export default {
             height 90px
             &:last-child
               margin 0
+    .info
+      padding 18px 18px 0 18px
+      color rgb(7,17,27)
+      .title
+        padding-bottom 12px
+        line-height 14px
+        border-1px(rgba(7,17,27,0.1))
+        font-size 14px
+      .info-item
+        padding 16px 12px
+        line-height 16px
+        border-1px(rgba(7,17,27,0.1))
+        font-size 12px
+        &:last-child
+          border-none()
 </style>

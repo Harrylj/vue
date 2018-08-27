@@ -29,12 +29,8 @@ export default {
   created () {
     this.$nextTick(() => {
       this.scroll_left = new BScroll(this.$refs.hc_left, {
-<<<<<<< Updated upstream
         // 允许执行点击事件
         click: true
-=======
-        click: true,
->>>>>>> Stashed changes
       })
       this.scroll_right = new BScroll(this.$refs.hc_right, {
         // 允许执行点击事件
