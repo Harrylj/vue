@@ -17,7 +17,9 @@
           </div>
       </div>
       <!-- 路由匹配到的组件将渲染在这里 -->
+      <keep-alive>
       <router-view :seller="seller"></router-view>
+      </keep-alive>
   </div>
 </template>
 
@@ -42,11 +44,13 @@ export default {
   },
   created () {
     // vue-resourse use
-    this.$http.get('/api/seller').then((response) => {
+    this.$http.get('/api/seller?id=' + this.seller.id).then((response) => {
       response = response.body
       if (response.errno === ERR_OK) {
-        this.seller = response.data
-        console.log(this.seller)
+        // this.seller = response.data
+        // 给对象扩展属性
+        this.seller = Object.assign({}, this.seller, response.data)
+        console.log(this.seller.id)
       }
     })
   },
