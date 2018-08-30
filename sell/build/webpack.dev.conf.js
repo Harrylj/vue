@@ -83,6 +83,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       template: 'index.html',
       inject: true
     }),
+    // 复制自定义静态资产
     // copy custom static assets
     new CopyWebpackPlugin([
       {
@@ -100,8 +101,10 @@ module.exports = new Promise((resolve, reject) => {
     if (err) {
       reject(err)
     } else {
+      // 发布e2e测试所必需的新端口
       // publish the new Port, necessary for e2e tests
       process.env.PORT = port
+      // 添加端口到devServer配置
       // add port to devServer config
       devWebpackConfig.devServer.port = port
 
