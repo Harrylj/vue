@@ -1,6 +1,12 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
+    <h1 >{{ msg }}</h1>
+    <h2 v-if="abc">{{abc}}</h2>
+    <input type="text" v-model="thisVal"><button @click="addList()">添加</button>
+    <input type="text" v-model="msgChange">
+    <ul>
+      <li v-for="(list,index) in lists" v-bind:key="index">{{list}}</li>
+    </ul>
     <h2>Essential Links</h2>
     <ul>
       <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
@@ -25,7 +31,26 @@ export default {
   name: 'hello',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to Your Vue.js App1',
+      abc: true,
+      lists: ['1', '2', '3'],
+      thisVal: ''
+    }
+  },
+  computed: {
+    msgChange: {
+      get: function () {
+        return this.msg.split('').reverse().join('')
+      },
+      set: function (abc) {
+        this.msg = abc
+      }
+    }
+  },
+  methods: {
+    addList () {
+      this.lists.push(this.thisVal)
+      this.thisVal = ''
     }
   }
 }
